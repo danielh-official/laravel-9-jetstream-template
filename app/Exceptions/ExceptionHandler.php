@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Foundation\Exceptions\Handler;
 use Throwable;
 
-class Handler extends ExceptionHandler
+class ExceptionHandler extends Handler
 {
     /**
      * A list of exception types with their corresponding custom log levels.
