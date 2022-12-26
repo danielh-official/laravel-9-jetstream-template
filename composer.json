@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "anhskohbo/no-captcha": "^3.4",
         "cviebrock/eloquent-sluggable": "^9.0",
         "diglactic/laravel-breadcrumbs": "^8.0",
         "guzzlehttp/guzzle": "^7.2",
