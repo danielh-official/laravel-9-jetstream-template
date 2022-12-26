@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
-class HandleInertiaRequests extends Middleware
+class HandleInertiaRequestsMiddleware extends Middleware
 {
     /**
      * The root template that is loaded on the first page visit.
@@ -21,7 +21,7 @@ class HandleInertiaRequests extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    public function version(Request $request)
+    public function version(Request $request): ?string
     {
         return parent::version($request);
     }
@@ -32,7 +32,7 @@ class HandleInertiaRequests extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function share(Request $request)
+    public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
             'ziggy' => function () use ($request) {
