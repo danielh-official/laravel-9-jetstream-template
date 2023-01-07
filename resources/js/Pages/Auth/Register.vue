@@ -1,5 +1,5 @@
-<script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+<script setup lang="ts">
+import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import AuthenticationCard from '../../Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '../../Components/AuthenticationCardLogo.vue';
 import Checkbox from '../../Components/Checkbox.vue';
@@ -7,6 +7,14 @@ import InputError from '../../Components/InputError.vue';
 import InputLabel from '../../Components/InputLabel.vue';
 import PrimaryButton from '../../Components/PrimaryButton.vue';
 import TextInput from '../../Components/TextInput.vue';
+import {JetstreamInterface, UserInterface} from "../../interfaces";
+
+defineProps({
+    jetstream: {type: Object as () => JetstreamInterface, required: true},
+    user: {type: Object as () => UserInterface, required: false}
+});
+
+declare function route(route: string): string;
 
 const form = useForm({
     name: '',
@@ -25,16 +33,16 @@ const submit = () => {
 
 <template>
     <!--suppress HtmlRequiredTitleElement -->
-    <Head title="Register" />
+    <Head title="Register"/>
 
     <AuthenticationCard>
         <template #logo>
-            <AuthenticationCardLogo />
+            <AuthenticationCardLogo/>
         </template>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Name"/>
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -44,11 +52,11 @@ const submit = () => {
                     autofocus
                     autocomplete="name"
                 />
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.name"/>
             </div>
 
             <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email"/>
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -56,11 +64,11 @@ const submit = () => {
                     class="mt-1 block w-full"
                     required
                 />
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.email"/>
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Password"/>
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -69,11 +77,11 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.password"/>
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+                <InputLabel for="password_confirmation" value="Confirm Password"/>
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -82,19 +90,23 @@ const submit = () => {
                     required
                     autocomplete="new-password"
                 />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                <InputError class="mt-2" :message="form.errors.password_confirmation"/>
             </div>
 
-            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
+            <div v-if="jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
                 <InputLabel for="terms">
                     <div class="flex items-center">
-                        <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
+                        <Checkbox id="terms" v-model:checked="form.terms" name="terms" required/>
 
                         <div class="ml-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                            I agree to the <a target="_blank" :href="route('terms.show')"
+                                              class="underline text-sm text-gray-600 hover:text-gray-900">Terms of
+                            Service</a> and <a target="_blank" :href="route('policy.show')"
+                                               class="underline text-sm text-gray-600 hover:text-gray-900">Privacy
+                            Policy</a>
                         </div>
                     </div>
-                    <InputError class="mt-2" :message="form.errors.terms" />
+                    <InputError class="mt-2" :message="form.errors.terms"/>
                 </InputLabel>
             </div>
 
