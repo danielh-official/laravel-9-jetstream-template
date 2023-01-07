@@ -12,12 +12,15 @@ createServer((page) =>
         page,
         render: renderToString,
         title: (title) => `${title} - ${appName}`,
+        // @ts-ignore
         resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
         setup({ app, props, plugin }) {
             return createSSRApp({ render: () => h(app, props) })
                 .use(plugin)
                 .use(ZiggyVue, {
+                    // @ts-ignore
                     ...page.props.ziggy,
+                    // @ts-ignore
                     location: new URL(page.props.ziggy.location),
                 });
         },

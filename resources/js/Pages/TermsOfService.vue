@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import AuthenticationCardLogo from '../Components/AuthenticationCardLogo.vue';
 
 defineProps({
     terms: String,
@@ -8,6 +8,7 @@ defineProps({
 </script>
 
 <template>
+    <!--suppress HtmlRequiredTitleElement -->
     <Head title="Terms of Service" />
 
     <div class="font-sans text-gray-900 antialiased">

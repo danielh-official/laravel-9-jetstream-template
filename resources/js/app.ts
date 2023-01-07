@@ -1,3 +1,5 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import './bootstrap';
 import '../css/app.css';
 
@@ -11,10 +13,13 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
+    // @ts-ignore
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    // @ts-ignore
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
+            // @ts-ignore
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },

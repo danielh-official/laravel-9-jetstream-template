@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import AuthenticationCardLogo from '../Components/AuthenticationCardLogo.vue';
 
 defineProps({
     policy: String,
@@ -8,6 +8,7 @@ defineProps({
 </script>
 
 <template>
+    <!--suppress HtmlRequiredTitleElement -->
     <Head title="Privacy Policy" />
 
     <div class="font-sans text-gray-900 antialiased">
