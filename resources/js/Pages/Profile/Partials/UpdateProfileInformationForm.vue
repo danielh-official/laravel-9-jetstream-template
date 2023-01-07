@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
@@ -9,9 +9,11 @@ import InputLabel from '../../../Components/InputLabel.vue';
 import PrimaryButton from '../../../Components/PrimaryButton.vue';
 import SecondaryButton from '../../../Components/SecondaryButton.vue';
 import TextInput from '../../../Components/TextInput.vue';
+import {JetstreamInterface, UserInterface} from "../../../interfaces";
 
 const props = defineProps({
-    user: Object,
+    jetstream: { type: Object as () => JetstreamInterface, required: true },
+    user: { type: Object as () => UserInterface, required: false }
 });
 
 const form = useForm({
@@ -24,6 +26,8 @@ const form = useForm({
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
+
+declare function route(route: string): string;
 
 const updateProfileInformation = () => {
     if (photoInput.value) {
@@ -88,7 +92,7 @@ const clearPhotoFileInput = () => {
 
         <template #form>
             <!-- Profile Photo -->
-            <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
+            <div v-if="jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
                 <!-- Profile Photo File Input -->
                 <input
                     ref="photoInput"
@@ -152,7 +156,7 @@ const clearPhotoFileInput = () => {
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
 
-                <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
+                <div v-if="jetstream.hasEmailVerification && user.email_verified_at === null">
                     <p class="text-sm mt-2">
                         Your email address is unverified.
 

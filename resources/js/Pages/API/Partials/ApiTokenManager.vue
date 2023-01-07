@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import ActionMessage from '../../../Components/ActionMessage.vue';
@@ -14,11 +14,13 @@ import PrimaryButton from '../../../Components/PrimaryButton.vue';
 import SecondaryButton from '../../../Components/SecondaryButton.vue';
 import SectionBorder from '../../../Components/SectionBorder.vue';
 import TextInput from '../../../Components/TextInput.vue';
+import {JetstreamInterface} from "../../../interfaces";
 
 const props = defineProps({
     tokens: Array,
     availablePermissions: Array,
     defaultPermissions: Array,
+    jetstream: {type: Object as () => JetstreamInterface, required: true},
 });
 
 const createApiTokenForm = useForm({
@@ -181,8 +183,8 @@ const deleteApiToken = () => {
                     Please copy your new API token. For your security, it won't be shown again.
                 </div>
 
-                <div v-if="$page.props.jetstream.flash.token" class="mt-4 bg-gray-100 px-4 py-2 rounded font-mono text-sm text-gray-500 break-all">
-                    {{ $page.props.jetstream.flash.token }}
+                <div v-if="jetstream.flash.token" class="mt-4 bg-gray-100 px-4 py-2 rounded font-mono text-sm text-gray-500 break-all">
+                    {{ jetstream.flash.token }}
                 </div>
             </template>
 
