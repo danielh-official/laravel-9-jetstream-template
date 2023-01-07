@@ -1,33 +1,49 @@
-<script setup>
-import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { useForm, usePage } from '@inertiajs/inertia-vue3';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import ActionSection from '@/Components/ActionSection.vue';
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import FormSection from '@/Components/FormSection.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
-import TextInput from '@/Components/TextInput.vue';
+<script setup lang="ts">
+import {ref} from 'vue';
+import {Inertia} from '@inertiajs/inertia';
+import {useForm, usePage} from '@inertiajs/inertia-vue3';
+import ActionMessage from '../../../Components/ActionMessage.vue';
+import ActionSection from '../../../Components/ActionSection.vue';
+import ConfirmationModal from '../../../Components/ConfirmationModal.vue';
+import DangerButton from '../../../Components/DangerButton.vue';
+import DialogModal from '../../../Components/DialogModal.vue';
+import FormSection from '../../../Components/FormSection.vue';
+import InputError from '../../../Components/InputError.vue';
+import InputLabel from '../../../Components/InputLabel.vue';
+import PrimaryButton from '../../../Components/PrimaryButton.vue';
+import SecondaryButton from '../../../Components/SecondaryButton.vue';
+import SectionBorder from '../../../Components/SectionBorder.vue';
+import TextInput from '../../../Components/TextInput.vue';
+import {JetstreamInterface, RoleInterface, UserInterface} from "../../../interfaces";
+
+declare function route(route: string, parameters?: object): string;
+
+declare function useForm(data?: {
+    email?: string;
+    role?: number | null;
+});
 
 const props = defineProps({
-    team: Object,
-    availableRoles: Array,
-    userPermissions: Object,
+    team: Object as () => {
+        team_invitations: object[],
+        users: UserInterface[]
+    },
+    availableRoles: Array as () => RoleInterface[],
+    userPermissions: Object as () => {
+        canAddTeamMembers: boolean;
+        canRemoveTeamMembers: boolean;
+    },
+    jetstream: {type: Object as () => JetstreamInterface, required: true},
+    user: {type: Object as () => UserInterface, required: false}
 });
 
 const addTeamMemberForm = useForm({
     email: '',
-    role: null,
+    role: null as number | null,
 });
 
 const updateRoleForm = useForm({
-    role: null,
+    role: null as number | null,
 });
 
 const leaveTeamForm = useForm();
@@ -94,7 +110,7 @@ const displayableRole = (role) => {
 <template>
     <div>
         <div v-if="userPermissions.canAddTeamMembers">
-            <SectionBorder />
+            <SectionBorder/>
 
             <!-- Add Team Member -->
             <FormSection @submitted="addTeamMember">
@@ -115,20 +131,20 @@ const displayableRole = (role) => {
 
                     <!-- Member Email -->
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="email" value="Email" />
+                        <InputLabel for="email" value="Email"/>
                         <TextInput
                             id="email"
                             v-model="addTeamMemberForm.email"
                             type="email"
                             class="mt-1 block w-full"
                         />
-                        <InputError :message="addTeamMemberForm.errors.email" class="mt-2" />
+                        <InputError :message="addTeamMemberForm.errors.email" class="mt-2"/>
                     </div>
 
                     <!-- Role -->
                     <div v-if="availableRoles.length > 0" class="col-span-6 lg:col-span-4">
-                        <InputLabel for="roles" value="Role" />
-                        <InputError :message="addTeamMemberForm.errors.role" class="mt-2" />
+                        <InputLabel for="roles" value="Role"/>
+                        <InputError :message="addTeamMemberForm.errors.role" class="mt-2"/>
 
                         <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
                             <button
@@ -136,18 +152,20 @@ const displayableRole = (role) => {
                                 :key="role.key"
                                 type="button"
                                 class="relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200"
-                                :class="{'border-t border-gray-200 rounded-t-none': i > 0, 'rounded-b-none': i != Object.keys(availableRoles).length - 1}"
+                                :class="{'border-t border-gray-200 rounded-t-none': i > 0, 'rounded-b-none': i !== Object.keys(availableRoles).length - 1}"
                                 @click="addTeamMemberForm.role = role.key"
                             >
-                                <div :class="{'opacity-50': addTeamMemberForm.role && addTeamMemberForm.role != role.key}">
+                                <div
+                                    :class="{'opacity-50': addTeamMemberForm.role && addTeamMemberForm.role !== role.key}">
                                     <!-- Role Name -->
                                     <div class="flex items-center">
-                                        <div class="text-sm text-gray-600" :class="{'font-semibold': addTeamMemberForm.role == role.key}">
+                                        <div class="text-sm text-gray-600"
+                                             :class="{'font-semibold': addTeamMemberForm.role === role.key}">
                                             {{ role.name }}
                                         </div>
 
                                         <svg
-                                            v-if="addTeamMemberForm.role == role.key"
+                                            v-if="addTeamMemberForm.role === role.key"
                                             class="ml-2 h-5 w-5 text-green-400"
                                             fill="none"
                                             stroke-linecap="round"
@@ -155,7 +173,9 @@ const displayableRole = (role) => {
                                             stroke-width="2"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
-                                        ><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        >
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
                                     </div>
 
                                     <!-- Role Description -->
@@ -173,7 +193,8 @@ const displayableRole = (role) => {
                         Added.
                     </ActionMessage>
 
-                    <PrimaryButton :class="{ 'opacity-25': addTeamMemberForm.processing }" :disabled="addTeamMemberForm.processing">
+                    <PrimaryButton :class="{ 'opacity-25': addTeamMemberForm.processing }"
+                                   :disabled="addTeamMemberForm.processing">
                         Add
                     </PrimaryButton>
                 </template>
@@ -181,7 +202,7 @@ const displayableRole = (role) => {
         </div>
 
         <div v-if="team.team_invitations.length > 0 && userPermissions.canAddTeamMembers">
-            <SectionBorder />
+            <SectionBorder/>
 
             <!-- Team Member Invitations -->
             <ActionSection class="mt-10 sm:mt-0">
@@ -190,13 +211,15 @@ const displayableRole = (role) => {
                 </template>
 
                 <template #description>
-                    These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.
+                    These people have been invited to your team and have been sent an invitation email. They may join
+                    the team by accepting the email invitation.
                 </template>
 
                 <!-- Pending Team Member Invitation List -->
                 <template #content>
                     <div class="space-y-6">
-                        <div v-for="invitation in team.team_invitations" :key="invitation.id" class="flex items-center justify-between">
+                        <div v-for="invitation in team.team_invitations" :key="invitation.id"
+                             class="flex items-center justify-between">
                             <div class="text-gray-600">
                                 {{ invitation.email }}
                             </div>
@@ -218,7 +241,7 @@ const displayableRole = (role) => {
         </div>
 
         <div v-if="team.users.length > 0">
-            <SectionBorder />
+            <SectionBorder/>
 
             <!-- Manage Team Members -->
             <ActionSection class="mt-10 sm:mt-0">
@@ -233,11 +256,12 @@ const displayableRole = (role) => {
                 <!-- Team Member List -->
                 <template #content>
                     <div class="space-y-6">
-                        <div v-for="user in team.users" :key="user.id" class="flex items-center justify-between">
+                        <div v-for="teamUser in team.users" :key="user.id" class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <img class="w-8 h-8 rounded-full" :src="user.profile_photo_url" :alt="user.name">
+                                <img class="w-8 h-8 rounded-full" :src="teamUser.profile_photo_url"
+                                     :alt="teamUser.name">
                                 <div class="ml-4">
-                                    {{ user.name }}
+                                    {{ teamUser.name }}
                                 </div>
                             </div>
 
@@ -248,16 +272,16 @@ const displayableRole = (role) => {
                                     class="ml-2 text-sm text-gray-400 underline"
                                     @click="manageRole(user)"
                                 >
-                                    {{ displayableRole(user.membership.role) }}
+                                    {{ displayableRole(teamUser.membership.role) }}
                                 </button>
 
                                 <div v-else-if="availableRoles.length" class="ml-2 text-sm text-gray-400">
-                                    {{ displayableRole(user.membership.role) }}
+                                    {{ displayableRole(teamUser.membership.role) }}
                                 </div>
 
                                 <!-- Leave Team -->
                                 <button
-                                    v-if="$page.props.user.id === user.id"
+                                    v-if="user.id === teamUser.id"
                                     class="cursor-pointer ml-6 text-sm text-red-500"
                                     @click="confirmLeavingTeam"
                                 >
@@ -268,7 +292,7 @@ const displayableRole = (role) => {
                                 <button
                                     v-else-if="userPermissions.canRemoveTeamMembers"
                                     class="cursor-pointer ml-6 text-sm text-red-500"
-                                    @click="confirmTeamMemberRemoval(user)"
+                                    @click="confirmTeamMemberRemoval(teamUser)"
                                 >
                                     Remove
                                 </button>
@@ -299,7 +323,8 @@ const displayableRole = (role) => {
                             <div :class="{'opacity-50': updateRoleForm.role && updateRoleForm.role !== role.key}">
                                 <!-- Role Name -->
                                 <div class="flex items-center">
-                                    <div class="text-sm text-gray-600" :class="{'font-semibold': updateRoleForm.role === role.key}">
+                                    <div class="text-sm text-gray-600"
+                                         :class="{'font-semibold': updateRoleForm.role === role.key}">
                                         {{ role.name }}
                                     </div>
 
@@ -312,7 +337,9 @@ const displayableRole = (role) => {
                                         stroke-width="2"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
-                                    ><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    >
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
                                 </div>
 
                                 <!-- Role Description -->
