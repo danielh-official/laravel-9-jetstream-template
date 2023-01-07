@@ -1,9 +1,9 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import DeleteTeamForm from '@/Pages/Teams/Partials/DeleteTeamForm.vue';
-import SectionBorder from '@/Components/SectionBorder.vue';
-import TeamMemberManager from '@/Pages/Teams/Partials/TeamMemberManager.vue';
-import UpdateTeamNameForm from '@/Pages/Teams/Partials/UpdateTeamNameForm.vue';
+import AppLayout from '../../Layouts/AppLayout.vue';
+import DeleteTeamForm from '../../Pages/Teams/Partials/DeleteTeamForm.vue';
+import SectionBorder from '../../Components/SectionBorder.vue';
+import TeamMemberManager from '../../Pages/Teams/Partials/TeamMemberManager.vue';
+import UpdateTeamNameForm from '../../Pages/Teams/Partials/UpdateTeamNameForm.vue';
 
 defineProps({
     team: Object,
